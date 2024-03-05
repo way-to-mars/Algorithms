@@ -1,9 +1,4 @@
-
-
 fun main() {
-    val (p, v) = readIntegers(2)
-    val (q, m) = readIntegers(2)
-    paintTrees(p = p, q = q, v = v, m = m).also { println(it) }
+    val n = readln().toIntOrNull() ?: 0
+    println((1..n).sumOf { readln().toLong().toTaps() })
 }
-
-fun readIntegers(count: Int) = readln().split(" ").mapNotNull { it.toIntOrNull() }.take(count)
