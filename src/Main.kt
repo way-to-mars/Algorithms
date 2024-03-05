@@ -1,4 +1,15 @@
 fun main() {
-    val n = readln().toIntOrNull() ?: 0
-    println((1..n).sumOf { readln().toLong().toTaps() })
+    val chessDesk = ChessDesk()
 }
+/*
+
+********
+*R**R***
+********
+*****R**
+********
+**B*****
+********
+*B******
+
+*/
