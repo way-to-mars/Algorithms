@@ -15,13 +15,11 @@
 Формат вывода
 Выведите количество пустых клеток, которые не бьются ни одной из фигур.
  */
-
-/*
 fun main() {
     val chessDesk = ChessDesk()
     chessDesk.calcSafeCells().also { println(it) }
 }
-*/
+
 class ChessDesk {
     enum class Type(val sym: Char) {
         Void('*'),
