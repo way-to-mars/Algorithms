@@ -14,18 +14,14 @@
 
 Формат вывода
 Выведите количество пустых клеток, которые не бьются ни одной из фигур.
-
-Пример ввода:
-********
-*R******
-********
-*****B**
-********
-********
-********
-********
  */
 
+/*
+fun main() {
+    val chessDesk = ChessDesk()
+    chessDesk.calcSafeCells().also { println(it) }
+}
+*/
 class ChessDesk {
     enum class Type(val sym: Char) {
         Void('*'),
@@ -35,34 +31,97 @@ class ChessDesk {
 
     private val mapper = Type.entries.associateBy { it.sym }
     private val cells = (1..8).flatMap { readln().mapNotNull { ch -> mapper[ch] }.take(8) }
-
-    init {
-        val rows = BooleanArray(8){ false}
-        val colums = BooleanArray(8){ false}
-        val diagonalA = BooleanArray(16){ false}
-        val diagonalB = BooleanArray(16){ false}
-
-        cells.withIndex().forEach { item ->
-            val x = item.index / 8
-            val y = item.index % 8
-            when (item.value)
-            {
-                Type.Rook -> {
-                    rows[x] = true
-                    colums[y] = true
-                }
-                Type.Bishop -> {
-                    diagonalA[x + y] = true
-                    diagonalB[8 + x - y] = true
-                }
-                else -> Unit
+    fun calcSafeCells() =
+        cells.asSequence()
+            .withIndex()
+            .filter { it.value == Type.Void }
+            .filter {
+                val x = it.index % 8
+                val y = it.index / 8
+                !beatenByRook(x, y) && !beatenByBishop(x, y)
             }
+            .count()
+
+    private fun beatenByRook(x: Int, y: Int): Boolean {
+        for (i in 1..7) when (get(x + i, y)) {
+            Type.Void -> Unit
+            Type.Rook -> return true
+            Type.Bishop, null -> break
         }
-
-        println("rows = ${rows.contentToString()}")
-        println("columns = ${colums.contentToString()}")
-        println("diagonalA = ${diagonalA.contentToString()}")
-        println("diagonalB = ${diagonalB.contentToString()}")
-
+        for (i in 1..7) when (get(x - i, y)) {
+            Type.Void -> Unit
+            Type.Rook -> return true
+            Type.Bishop, null -> break
+        }
+        for (i in 1..7) when (get(x, y + i)) {
+            Type.Void -> Unit
+            Type.Rook -> return true
+            Type.Bishop, null -> break
+        }
+        for (i in 1..7) when (get(x, y - i)) {
+            Type.Void -> Unit
+            Type.Rook -> return true
+            Type.Bishop, null -> break
+        }
+        return false
+    }
+    private fun beatenByBishop(x: Int, y: Int): Boolean {
+        for (i in 1..7) when (get(x + i, y + i)) {
+            Type.Void -> Unit
+            Type.Bishop -> return true
+            Type.Rook, null -> break
+        }
+        for (i in 1..7) when (get(x + i, y - i)) {
+            Type.Void -> Unit
+            Type.Bishop -> return true
+            Type.Rook, null -> break
+        }
+        for (i in 1..7) when (get(x - i, y + i)) {
+            Type.Void -> Unit
+            Type.Bishop -> return true
+            Type.Rook, null -> break
+        }
+        for (i in 1..7) when (get(x - i, y - i)) {
+            Type.Void -> Unit
+            Type.Bishop -> return true
+            Type.Rook, null -> break
+        }
+        return false
+    }
+    private fun get(x: Int, y: Int): Type? {
+        if (x !in 0..7 || y !in 0..7) return null
+        return cells[x + 8 * y]
     }
 }
+
+/* Примеры
+-49-
+********
+********
+*R******
+********
+********
+********
+********
+********
+
+-54-
+********
+********
+******B*
+********
+********
+********
+********
+********
+
+-40-
+********
+*R******
+********
+*****B**
+********
+********
+********
+********
+ */

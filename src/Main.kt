@@ -1,15 +1,4 @@
 fun main() {
     val chessDesk = ChessDesk()
+    chessDesk.calcSafeCells().also { println(it) }
 }
-/*
-
-********
-*R**R***
-********
-*****R**
-********
-**B*****
-********
-*B******
-
-*/
