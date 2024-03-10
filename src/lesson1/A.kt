@@ -1,3 +1,5 @@
+package lesson1
+
 import kotlin.math.max
 import kotlin.math.min
 
@@ -26,15 +28,16 @@ import kotlin.math.min
  12 5
 
 ================================
+ */
+
 fun main() {
     val (p, v) = readIntegers(2)
     val (q, m) = readIntegers(2)
     paintTrees(p = p, q = q, v = v, m = m).also { println(it) }
 }
 
-fun readIntegers(count: Int) = readln().split(" ").mapNotNull { it.toIntOrNull() }.take(count)
-================================
- */
+//fun readIntegers(count: Int) = readln().split(" ").mapNotNull { it.toIntOrNull() }.take(count)
+
 fun paintTrees(p: Int, q: Int, v: Int, m: Int): Int {
     require(v >= 0 && m >= 0) { "Дистанция (V или M) не может быть отрицательным числом" }
     val sumSets = 2 * (v + m + 1)

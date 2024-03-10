@@ -1,4 +1,4 @@
-/* B. Футбольный комментатор
+package lesson1/* B. Футбольный комментатор
 
 Раунд плей-офф между двумя командами состоит из двух матчей. Каждая команда проводит по одному матчу «дома»
 и «в гостях». Выигрывает команда, забившая большее число мячей. Если же число забитых мячей совпадает, выигрывает
@@ -17,7 +17,7 @@
 Формат вывода
 Выведите единственное целое число — необходимое количество мячей.
 */
-/*
+
 fun main() {
     val (a1, b1) = readIntegers(2)
     val (a2, b2) = readIntegers(2)
@@ -29,7 +29,7 @@ fun main() {
 }
 
 fun readIntegers(count: Int) = readln().split(":").mapNotNull { it.toIntOrNull() }.take(count)
-*/
+
 fun isWin(a1: Int, b1: Int, a2: Int, b2: Int, firstHome: Boolean): Boolean {
     val compare = (a1 + a2).compareTo(b1 + b2)
     return when {

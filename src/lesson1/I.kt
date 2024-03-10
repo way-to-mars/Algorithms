@@ -1,4 +1,6 @@
-import Calendar.toDayOfWeek
+package lesson1
+
+import lesson1.Calendar.toDayOfWeek
 
 fun main() {
     val holidaysCount = readln().toInt()

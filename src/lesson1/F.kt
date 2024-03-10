@@ -1,3 +1,5 @@
+package lesson1
+
 fun main() {
     val n = readln().toInt()
     val input = readln().split(" ").mapNotNull(String::toIntOrNull).take(n)

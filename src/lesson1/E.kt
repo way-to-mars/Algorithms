@@ -1,3 +1,5 @@
+package lesson1
+
 fun main() {
     val (n, k, d) = readln().split(" ").map(String::toInt)
     calculateIncome(n, k, d).also(::println)

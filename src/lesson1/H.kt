@@ -1,3 +1,5 @@
+package lesson1
+
 fun main() {
     val (len, x1, v1, x2, v2) = readln().split(" ").mapNotNull(String::toDoubleOrNull).take(5)
 
