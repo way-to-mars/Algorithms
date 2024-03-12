@@ -8,12 +8,17 @@ fun main() {
         return
     }
 
-    val dimOfA = picture.paintRectangle('a')
-    val dimOfB = picture.paintRectangle('b')
+    var dimOfA = picture.paintRectangle('a')
+    var dimOfB = picture.paintRectangle('b')
 
     if (picture.blackSquares > 0) {
-        println("NO")
-        return
+        picture.rollBack()  // restore the painting ( 'ab' -> '#' )
+        dimOfA = picture.paintRectangle('a', alterSearch = true)
+        dimOfB = picture.paintRectangle('b')
+        if (picture.blackSquares > 0) {
+            println("NO")
+            return
+        }
     }
 
     if (dimOfB == 0 to 0) picture.cut(dimOfA, 'a', 'b')
@@ -37,13 +42,18 @@ class Picture {
     val blackSquares: Int
         get() = matrix.sumOf { it.count { ch -> ch == '#' } }
 
-    private fun firstChar(char: Char): Pair<Int, Int> {
-        for (i in matrix.indices) for (j in matrix[i].indices) if (matrix[i][j] == char) return i to j
+    private fun firstChar(char: Char, alterSearch: Boolean = false): Pair<Int, Int> {
+        if (alterSearch) {
+            for (j in matrix[0].indices) for (i in matrix.indices) if (matrix[i][j] == char) return i to j
+        }
+        else {
+            for (i in matrix.indices) for (j in matrix[i].indices) if (matrix[i][j] == char) return i to j
+        }
         return -1 to -1
     }
 
-    fun paintRectangle(char: Char): Pair<Int, Int> {  // returns area of painted area
-        val (x, y) = firstChar('#')
+    fun paintRectangle(char: Char, alterSearch: Boolean = false): Pair<Int, Int> {  // returns area of painted area
+        val (x, y) = firstChar('#', alterSearch)
         if (x < 0 || y < 0) return 0 to 0
 
         var width = 0
@@ -76,13 +86,22 @@ class Picture {
         else {
             for (i in 0..<height) matrix[x][y + i] = ch2
         }
+    }
 
+    fun rollBack(){
+        for (i in matrix.indices)
+            for (j in matrix[i].indices)
+                if (matrix[i][j] !in listOf('.','#')) matrix[i][j] = '#'
     }
 
     override fun toString() = matrix.joinToString(separator = "\n") { it.joinToString(separator = "") }
 }
 
 /*
+2 4
+.#..
+###.
+
 2 1
 #
 .
@@ -96,6 +115,11 @@ class Picture {
 
 1 5
 ####.
+
+3 5
+.....
+.###.
+.###.
 
 4 3
 .##
