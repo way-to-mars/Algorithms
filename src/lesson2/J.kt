@@ -45,8 +45,7 @@ class Picture {
     private fun firstChar(char: Char, alterSearch: Boolean = false): Pair<Int, Int> {
         if (alterSearch) {
             for (j in matrix[0].indices) for (i in matrix.indices) if (matrix[i][j] == char) return i to j
-        }
-        else {
+        } else {
             for (i in matrix.indices) for (j in matrix[i].indices) if (matrix[i][j] == char) return i to j
         }
         return -1 to -1
@@ -88,10 +87,10 @@ class Picture {
         }
     }
 
-    fun rollBack(){
+    fun rollBack() {
         for (i in matrix.indices)
             for (j in matrix[i].indices)
-                if (matrix[i][j] !in listOf('.','#')) matrix[i][j] = '#'
+                if (matrix[i][j] !in listOf('.', '#')) matrix[i][j] = '#'
     }
 
     override fun toString() = matrix.joinToString(separator = "\n") { it.joinToString(separator = "") }
