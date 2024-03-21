@@ -1,5 +1,7 @@
 package examples
 
+// Решето Эратосфена
+// Поиск всех простых числе от 1 до N
 fun main() {
     val n = 10_000_000
     val resheto = Resheto(n)

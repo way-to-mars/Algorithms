@@ -4,7 +4,7 @@ package lesson3
 fun main() {
     val n = readln().toInt()  // N (1 ≤ N ≤ 2000) — количество точек.
     val points: Set<Pair<Int, Int>> =  // по два числа xi, yi (-10^8 ≤ xi, yi ≤ 10^8) — координаты точек.
-        (1..n).map { readln().split(" ").run { this[0].toInt() to this[1].toInt() } }.toSet()
+        (1..n).map { readln().split(" ").run { this[0].toInt() to this[1].toInt() } }.toHashSet()
 
     val pts = pointsMissing(points)
     println(pts.size)
