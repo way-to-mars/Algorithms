@@ -21,6 +21,21 @@ fun main() {
 }
 
 class SoccerPedia{
+    inner class GameBuilder(gameInfo: String){
+        val name1: String
+        val name2: String
+        val goalsStack1: ArrayDeque<Pair<String, Int>> = ArrayDeque()
+        val goalsStack2: ArrayDeque<Pair<String, Int>> = ArrayDeque()
+
+        init {
+            val (_, team1, _, team2) = gameInfo.split('\"')
+            val (score1, score2) = gameInfo.split(' ').last().split(':').map(String::toInt)
+
+            name1 = team1
+            name2 = team2
+        }
+
+    }
     private var goalsCounter = -1
     private val parsingGame
         get() = goalsCounter > 0
@@ -45,7 +60,7 @@ class SoccerPedia{
     fun parse(message: String){
         when{
             message.contains(':') -> startGame(message)
-            parsingGame == true -> parseGoal(message)
+            parsingGame -> parseGoal(message)
             else -> println(message)
         }
     }
