@@ -59,7 +59,6 @@ class SoccerPedia {
         class GoalInfo(str: String) {
             val name: String
             val minute: Int
-
             init {
                 val i = str.lastIndexOf(' ')
                 minute = str.drop(i + 1).dropLast(1).toInt()
@@ -112,25 +111,29 @@ class SoccerPedia {
     }
 
     private fun totalGoalsForTeam(question: String) {
-        // val teamName = question.drop("Total goals for ".length)
         val teamName = question.split('\"')[1]
         val goals = teams[teamName]?.goals ?: 0
         println(goals)
     }
 
     private fun meanGoalForTeam(question: String) {
-        // val teamName = question.drop("Mean goals per game for ".length)
         val teamName = question.split('\"')[1]
         if (teams.containsKey(teamName)) {
-            println(teams[teamName]!!.goals / teams[teamName]!!.games)
-        } else println(0)
+            println(teams[teamName]!!.goals.toDouble() / teams[teamName]!!.games)
+        } else
+            println(0)
     }
 
     private fun opensBy(question: String) {
-        val name = question.drop("Score opens by ".length).trim('\"')
-        if (teams.containsKey(name)) {  // by team
-            println(teams[name]!!.opens)
-        } else if (players.containsKey(name)) {  // by player
+        val name = question.drop("Score opens by ".length)
+        if (name.first() == '\"' && name.last() == '\"'){ // by team
+            val teamName = name.trim('\"')
+            if (teams.containsKey(teamName)) {
+                println(teams[teamName]!!.opens)
+            } else println(0)
+            return
+        }
+        if (players.containsKey(name)) {  // by player
             println(players[name]!!.opens)
         } else println(0)
     }
@@ -163,9 +166,12 @@ class SoccerPedia {
         val minute = question.split(" ")[3].toInt()
 
         when {
-            question.startsWith("Goals on minute") -> println(players[name]!!.minutes.count { it == minute })
-            question.startsWith("Goals on first") -> println(players[name]!!.minutes.count { it <= minute })
-            question.startsWith("Goals on last") -> println(players[name]!!.minutes.count { it > minute })
+            question.startsWith("Goals on minute") ->
+                println(players[name]!!.minutes.count { it == minute })
+            question.startsWith("Goals on first") ->
+                println(players[name]!!.minutes.count { it <= minute })
+            question.startsWith("Goals on last") ->
+                println(players[name]!!.minutes.count { it > 90 - minute })
             else -> throw IllegalArgumentException("Unable to parse $question")
         }
     }
