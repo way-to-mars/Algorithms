@@ -1,7 +1,6 @@
 package lesson3
 
 fun main() {
-    //  2 ≤ n ≤ 100, 1 ≤ k ≤ 200
     val (n, k) = readln().split(" ").map(String::toInt)
 
     val workGroup = WorkGroup(n, k)
@@ -16,10 +15,9 @@ class WorkGroup(val n: Int, val k: Int) {
     val finished: Boolean
         get() = !units.any { it.countLoaded() < k }
     fun step() {
-        println(units)
         val frequencyMap = IntArray(k) { i ->
             units.count { it.parts[i] }
-        }.also { println("frequencyMap = ${it.contentToString()}") }
+        }
         (1..<n).forEach {
             val partIndex = units[it].findNextPart(frequencyMap)
             /**
@@ -43,7 +41,6 @@ class WorkGroup(val n: Int, val k: Int) {
         }.forEach {
             it.first.transmit(it.second.first, it.second.second)
         }
-        println("--------------end of step---------------")
     }
 }
 
@@ -68,12 +65,10 @@ class Unit(k: Int, val number: Int) {
         ?.index ?: -1
 
     fun ask(asker: Unit, partIndex: Int) {
-        println("Asker $asker requested part $partIndex from $this")
         requests.add(asker to partIndex)
     }
 
     fun answer(): Pair<Unit, Pair<Unit, Int>>? {
-        println("#$number: my requests = $requests")
         if (requests.isEmpty()) return null
 
         /**
@@ -90,20 +85,17 @@ class Unit(k: Int, val number: Int) {
         val minLoaded = bestUnits.minBy { it.first.countLoaded() }.first.countLoaded()
         val choice = bestUnits.filter { it.first.countLoaded() == minLoaded }.minBy { it.first.number }
 
-        // choice.first.transmit(this, choice.second)
         requests.clear()  // after all
         return choice.first to (this to choice.second)
     }
 
     fun transmit(unit: Unit, partIndex: Int) {
-        println("$number: loading $partIndex part from $unit")
         ratings[unit] = ratings.getOrDefault(unit, 0) + 1
         parts[partIndex] = true
 
         if (!parts.any{ it == false }){
             done = true
             slotsTaken = rounds
-            println("fin $this")
         }
     }
 
