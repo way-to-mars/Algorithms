@@ -2,7 +2,7 @@ package lesson4
 
 import java.util.*
 
-typealias myMap = HashMap<Int, Pair<Int, Int>>
+typealias HMap = HashMap<Int, Pair<Int, Int>>
 
 fun main() {
     val (w, h, n) = readln().split(" ").map(String::toInt)
@@ -39,59 +39,53 @@ fun main() {
     println(binarySearch(w, h, columns, rows))
 }
 
-data class Atom(val key: Int, val min: Int, val max: Int) {
-    constructor(elem: MutableMap.MutableEntry<Int, Pair<Int, Int>>) : this(
-        elem.key,
-        elem.value.first,
-        elem.value.second
-    )
-}
+data class Atom(val key: Int, val min: Int, val max: Int)
 
-fun check(n: Int, k: Int, col: myMap, row: myMap): Boolean {
-    val window = ArrayDeque<Atom>()
+fun check(n: Int, k: Int, columns: HMap, rows: HMap,
+          e: List<Int>,
+          resd: List<MutableMap.MutableEntry<Int, Pair<Int, Int>>>,
+          resa: List<MutableMap.MutableEntry<Int, Pair<Int, Int>>>): Boolean {
+    val deque = ArrayDeque<Atom>()
 
-    val itr = col.iterator()
-    val e = col.keys.sorted()
-    window.add(Atom(e[0], col[e[0]]!!.first, col[e[0]]!!.second))
-    for (i in 0..<k) { // repeat(k)
-        if (e[i] < window.first.key + k) {
-            window.add(Atom(e[i], col[e[i]]!!.first, col[e[i]]!!.second))
+    val itr = columns.iterator()
+
+    deque.add(Atom(e[0], columns[e[0]]!!.first, columns[e[0]]!!.second))
+    for (i in 0..<k) {
+        if (e[i] < deque.first.key + k) {
+            deque.add(Atom(e[i], columns[e[i]]!!.first, columns[e[i]]!!.second))
             itr.next()
             if (itr.hasNext()) break
         } else
             break
     }
 
-    var minRow = col.entries.asSequence().drop(window.size - 1).minOf { it.value.first }
-    var maxRow = col.entries.asSequence().drop(window.size - 1).maxOf { it.value.second }
-
-    println(" ${col.entries.drop(window.size - 1).size} k=$k ws=${window.size} cs=${col.size}")
-
-    if (window.size >= n) return true
+    var minRow = columns.entries.asSequence().drop(deque.size - 1).minOf { it.value.first }
+    var maxRow = columns.entries.asSequence().drop(deque.size - 1).maxOf { it.value.second }
+    //println(" ${columns.entries.drop(window.size - 1).size} k=$k ws=${window.size} cs=${col.size}")
+    if (deque.size >= n) return true
     if (maxRow - minRow < k) return true
 
-   // for (item in col.entries.drop(window.size - 1)) {
-    for(key in e.asSequence().drop(window.size - 1)){
-        val item = Atom(key, col[key]!!.first, col[key]!!.second)
-        for (i in 0..<window.size) {
-            if (window.first.key <= item.key - k) {
-                if (window.first.max > maxRow)
-                    maxRow = window.first.max
-                if (window.first.min < minRow)
-                    minRow = window.first.min
-                window.removeFirst()
+    for(key in e.asSequence().drop(deque.size - 1)){
+        val item = Atom(key, columns[key]!!.first, columns[key]!!.second)
+        for (i in 0..<deque.size) {
+            if (deque.first.key <= item.key - k) {
+                if (deque.first.max > maxRow)
+                    maxRow = deque.first.max
+                if (deque.first.min < minRow)
+                    minRow = deque.first.min
+                deque.removeFirst()
             } else {
                 break
             }
         }
 
-        window.add(item)
+        deque.add(item)
 
         if (maxRow == item.max) {
-            val l = row[maxRow]!!.first
-            val r = row[maxRow]!!.second
+            val l = rows[maxRow]!!.first
+            val r = rows[maxRow]!!.second
             if (item.key == r && l > r - k) {
-                val itr2 = row.entries.reversed().iterator()
+                val itr2 = resd.iterator()
                 while (itr2.next().key != maxRow) {
                     Unit
                 }
@@ -108,11 +102,11 @@ fun check(n: Int, k: Int, col: myMap, row: myMap): Boolean {
         }
 
         if (minRow == item.min) {
-            val l = row[minRow]!!.first
-            val r = row[minRow]!!.second
+            val l = rows[minRow]!!.first
+            val r = rows[minRow]!!.second
             if (item.key == r && l > r - k) {
 
-                val itr3 = row.entries.iterator()
+                val itr3 = resa.iterator()
                 while (itr3.next().key != minRow) {
                     Unit
                 }
@@ -134,12 +128,15 @@ fun check(n: Int, k: Int, col: myMap, row: myMap): Boolean {
     return false
 }
 
-fun binarySearch(w: Int, h: Int, columns: myMap, rows: myMap): Int {
+fun binarySearch(w: Int, h: Int, columns: HMap, rows: HMap): Int {
+    val e: List<Int> = columns.keys.sorted()
+    val resd = rows.entries.sortedByDescending { it.key }
+    val resa: List<MutableMap.MutableEntry<Int, Pair<Int, Int>>> = rows.entries.sortedBy { it.key }
     var l = 1
     var r = minOf(w, h)
     while (l < r) {
         val m = (l + r) / 2
-        if (check(h, m, columns, rows))
+        if (check(h, m, columns, rows, e, resd, resa))
             r = m
         else
             l = m + 1
