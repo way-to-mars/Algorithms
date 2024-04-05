@@ -40,6 +40,8 @@ class Array2D<T>(val x: Int, val y: Int, init: (Int, Int) -> T) {
         return null
     }
 
+    fun index(linearIndex: Int) = linearIndex % x to linearIndex / x
+
     fun last(): T{
         @Suppress("UNCHECKED_CAST")
         return data.last() as T
