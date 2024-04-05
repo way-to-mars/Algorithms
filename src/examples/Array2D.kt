@@ -14,9 +14,14 @@ class Array2D<T>(val x: Int, val y: Int, init: (Int, Int) -> T) {
     private val data = Array<Any?>(x * y) { init(it % x, it / x) }
 
     operator fun get(i: Int, j: Int): T {
-        if (i !in 0..<y || j !in 0..<x) throw IndexOutOfBoundsException("Can't access to ($i, $j) in Array2D($x, $y)")
+        if (i !in 0..<x || j !in 0..<y) throw IndexOutOfBoundsException("Can't access to ($i, $j) in Array2D($x, $y)")
         @Suppress("UNCHECKED_CAST")
-        return data[i + y * j] as T
+        return data[i + x * j] as T
+    }
+
+    operator fun set(i: Int, j: Int, value: T) {
+        if (i !in 0..<x || j !in 0..<y) throw IndexOutOfBoundsException("Can't access to ($i, $j) in Array2D($x, $y)")
+        data[i + x * j]  = value
     }
     
     operator fun get(i: Int) = row(i)
@@ -33,6 +38,16 @@ class Array2D<T>(val x: Int, val y: Int, init: (Int, Int) -> T) {
             @Suppress("UNCHECKED_CAST")
             return Array(y){ data[j + it * x] } as Array<T>
         return null
+    }
+
+    fun last(): T{
+        @Suppress("UNCHECKED_CAST")
+        return data.last() as T
+    }
+
+    fun asSequence(): Sequence<T>{
+        @Suppress("UNCHECKED_CAST")
+        return data.toList().asSequence() as Sequence<T>
     }
 
     override fun equals(other: Any?): Boolean {
