@@ -1,6 +1,7 @@
 package dynamicAlgos
 
 import examples.Array2D
+import printLine
 
 fun main() {
     infix fun <T> List<T>.lcs(other: List<T>) = longestCommonSubsequence(this, other)
@@ -103,7 +104,3 @@ fun lis(a: List<Int>) {
     println(path.joinToString(separator = ", ") { a[it].toString() })
 }
 
-fun Any?.printLine(): Any? {
-    println(this)
-    return this
-}
