@@ -17,7 +17,7 @@ fun main() {
 
     str1.indexOf(str2).printLog()
 
-    findSubstringsKMP("лилилилил".toList(), "ииииииии".toList()).printLog()
+    findSubstringsKMP("аббракаддабра", "ака").printLog()
 }
 
 /**
@@ -69,33 +69,69 @@ fun <T> findSubstringsRabinCarp(source: List<T>, sub: List<T>): List<Int> {
     return res
 }
 
-fun <T> findSubstringsKMP(source: List<T>, sub: List<T>): List<Int> {
-    if (sub.isEmpty() || source.isEmpty() || source.size < sub.size) return emptyList()
-    if (sub.size == 1) return source.indices.filter { source[it] == sub.first() }
+fun findSubstringsKMP(a: String, b: String): List<Int> {
+    return findSubstringsKMP(a, b, a.length, b.length) { str, i -> str[i] }
+}
 
-    val pi = IntArray(sub.size).also {  // sub.size > 1
-        it[0] = 0
-        var j = 0
+fun <T : Comparable<T>> findSubstringsKMP(a: List<T>, b: List<T>): List<Int> {
+    return findSubstringsKMP(a, b, a.size, b.size) { list, i -> list[i] }
+}
+
+
+/**
+ * Алгоритм Кнута — Морриса — Пратта (КМП-алгоритм) — эффективный алгоритм, осуществляющий поиск подстроки в строке,
+ * используя то, что при возникновении несоответствия само слово содержит достаточно информации, чтобы определить,
+ * где может начаться следующее совпадение, минуя лишние проверки. Время работы алгоритма линейно зависит от объёма
+ * входных данных
+ * @param source исходная строка. Структура типа T, содержащая элементы типа R
+ * @param sub искомая подстрока
+ * @param sourceLen длина исходной строки
+ * @param subLen длина искомой подстроки
+ * @param getter функция доступа к элементам строки по индексу
+ * @return список индексов всех вхождения подстроки в строку (пустой, если вхождений нет)
+ */
+inline fun <T : Any, R : Comparable<R>> findSubstringsKMP(
+    source: T,
+    sub: T,
+    sourceLen: Int,
+    subLen: Int,
+    getter: (T, Int) -> R
+): List<Int> {
+    val prefix = IntArray(subLen).also {
         var i = 1
-        while (i < sub.size){
-            if (sub[i] != sub[j]){
-                if (j == 0){
+        var j = 0
+        it[0] = 0
+        while (i < subLen) {
+            if (getter(sub, i) == getter(sub, j)) {
+                it[i] = j + 1
+                i++
+                j++
+            } else {
+                if (j == 0) {
                     it[i] = 0
                     i++
-                }
-                else j = it[j - 1]
-            }
-            else{
-                if(sub[i] == sub[j]){
-                    it[i] = j + 1
-                    i++
-                    j++
+                } else {
+                    j = it[j - 1]
                 }
             }
         }
     }
-
-    pi.printLog { it.contentToString() }
-
-    return emptyList()
+    val res = mutableListOf<Int>()
+    var i = 0
+    var j = 0
+    while (i < sourceLen) {
+        if (getter(source, i) == getter(sub, j)) {
+            i++
+            j++
+            if (j == subLen) {
+                res.add(i - subLen)
+                j = 0
+                i = res.last() + 1
+            }
+        } else {
+            if (j > 0) j = prefix[j - 1]
+            else i++
+        }
+    }
+    return res
 }
