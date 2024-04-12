@@ -10,7 +10,7 @@ fun <T> T.printLog(
         println("null object")
         return this
     }
-    val type = if (showType) "(${this.javaClass.kotlin.qualifiedName}) = " else ""
+    val type = if (showType) "(${this.javaClass.kotlin.qualifiedName}) " else ""
     val time = if (showTime) "[${
         LocalDateTime.now()
             .format(DateTimeFormatter.ofPattern("HH:mm:ss.SSSSSS"))

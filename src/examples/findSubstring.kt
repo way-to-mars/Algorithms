@@ -2,22 +2,23 @@ package examples
 
 import fastPow
 import printLog
+import kotlin.random.Random
 
 fun main() {
-    val str1 = "Little mouse, little mouse, Where is your house? Little cat, little cat, I have no flat. " +
-            "I am a poor mouse, I have no house. Little mouse, little mouse," +
-            "Come into my house. " +
-            "Little cat, little cat, " +
-            "I cannot do that, " +
-            "You want to eat me!"
-    val str2 = "ou"
+    val alphabet = listOf('a', 'b', 'c', 'd', 'e', 'f')
+    val rnd = Random
+
+    val n = rnd.nextInt(15_000, 20_000)
+    val m = rnd.nextInt(3, 10)
+
+    val str1 = (1..n).map { alphabet[rnd.nextInt(alphabet.size)] }.joinToString(separator = "").printLog()
+    val str2 = (1..m).map { alphabet[rnd.nextInt(alphabet.size)] }.joinToString(separator = "").printLog()
 
     findSubstringsBruteForce(str1.toList(), str2.toList()).printLog()
     findSubstringsRabinCarp(str1.toList(), str2.toList()).printLog()
+    findSubstringsKMP(str1, str2).printLog()
 
     str1.indexOf(str2).printLog()
-
-    findSubstringsKMP("аббракаддабра", "ака").printLog()
 }
 
 /**
@@ -30,6 +31,7 @@ fun <T> findSubstringsBruteForce(where: List<T>, what: List<T>): List<Int> =
 
 
 /**
+ * Реализация скользящего хэша кривая !!! Вероятно, виновато переполнение Int
  * Алгоритм Рабина — Карпа — это алгоритм поиска строки, который ищет шаблон, то есть подстроку, в тексте,
  * используя хеширование.
  * Для текста длины n и шаблона длины m его среднее и лучшее время исполнения равно O(n) при правильном выборе
@@ -56,7 +58,7 @@ fun <T> findSubstringsRabinCarp(source: List<T>, sub: List<T>): List<Int> {
     while (true) {
         if (curHash == subHash) {
             if (!subIndices.any { i -> source[i + index] != sub[i] }) res.add(index)    // compare substrings
-//            else println("Hash collision")
+            else println("Hash collision")
         }
         rightIndex++
         if (rightIndex >= source.size) break
