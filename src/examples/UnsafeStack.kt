@@ -4,18 +4,8 @@ import printLog
 
 fun main() {
     val stack: Stack<Int> = UnsafeStack(100)
+    (1..30).forEach { stack.push(it * it) }
     stack.printLog()
-    stack.isEmpty.printLog()
-    stack.push(1)
-    stack.push(2)
-    stack.push(3)
-    stack.printLog()
-    stack.isEmpty.printLog()
-    stack.pop().printLog()
-    stack.pop().printLog()
-    stack.pop().printLog()
-    stack.printLog()
-    stack.isEmpty.printLog()
 }
 
 interface Stack<E> {
@@ -34,26 +24,31 @@ interface Stack<E> {
  */
 class UnsafeStack<E>(initialSize: Int) : Stack<E> {
     private val storage = Array<Any?>(initialSize) { null }
-    override var size: Int = 0
-        private set
+    private var _size = 0
+    override val size
+        get() = _size
 
     override fun pop(): E? {
-        if (size == 0) return null
+        if (_size == 0) return null
         @Suppress("UNCHECKED_CAST")
-        return storage[--size] as E
+        return storage[--_size] as E
     }
 
     override fun top(): E? {
-        if (size == 0) return null
+        if (_size == 0) return null
         @Suppress("UNCHECKED_CAST")
-        return storage[size - 1] as E
+        return storage[_size - 1] as E
     }
 
     override fun push(element: E) {
-        storage[size++] = element
+        storage[_size++] = element
     }
 
     override fun toString(): String {
-        return storage.asSequence().take(size).joinToString(separator = ", ", prefix = "[${size}: ", postfix = "]")
+        if (size == 0) return "0: [empty stack]"
+        if (size < 20) return storage.asSequence().take(size)
+            .joinToString(separator = ", ", prefix = "${size}: [", postfix = "]")
+        return storage.take(9).joinToString(separator = ", ", prefix = "${size}: [", postfix = ", ... ") +
+                storage.slice(size - 9..<size).joinToString(separator = ", ", postfix = "]")
     }
 }

@@ -1,13 +1,5 @@
-fun main(){
-    val iarr = IntArray(10)
-    iarr.printLog()
+fun main() {
+    val iarr: List<Int> = (1..20).map { it * it }
 
-    val arri = Array(10) { it }
-    arri.printLog()
-
-    val listi: java.util.ArrayList<Int> = ArrayList<Int>((1..10).map { it })
-    listi.printLog()
-
-    val list: Collection<Int> = listOf(0,1,2,3,4,5,6,7,8,9)
-    list.printLog()
+    iarr.toStringLimited(2).printLog()
 }

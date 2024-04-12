@@ -50,6 +50,7 @@ fun <T : Comparable<T>> List<T>.fastMinOf(): T? {
             minOf2(minOf2(this[0], this[1]), minOf2(this[2], this[3])),
             minOf2(minOf2(this[4], this[5]), minOf2(this[6], this[7]))
         )
+
         else -> this.min()
     }
 }
@@ -71,6 +72,28 @@ fun <T : Comparable<T>> List<T>.fastMaxOf(): T? {
             maxOf2(maxOf2(this[0], this[1]), maxOf2(this[2], this[3])),
             maxOf2(maxOf2(this[4], this[5]), maxOf2(this[6], this[7]))
         )
+
         else -> this.max()
+    }
+}
+
+
+/**
+ * Преобразует последовательность элементов в строку.
+ * Если количество элементов превышает limit, то возвращает строку по шаблону:
+ * "[T1, T2, ... Tn-1, Tn]: size=n",
+ * где количество отображаемых элементов соответствует параметру limit
+ */
+fun <T> Iterable<T>.toStringLimited(limit: Int): String {
+    val size = this.fold(0) { acc, _ -> acc + 1 }
+    return when{
+        size <= limit -> this.joinToString(separator = ", ", prefix = "[", postfix = "]")
+        else -> {
+            if (limit <= 0) return "[...]: size=$size"
+            val n = (limit + 1) / 2
+            val m = limit / 2
+            this.take(n).joinToString(separator = ", ", prefix = "[", postfix = ", ... ") +
+                    this.drop(size - m).joinToString(separator = ", ", postfix = "]: size=${size}")
+        }
     }
 }
