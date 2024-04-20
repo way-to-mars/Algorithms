@@ -1,10 +1,8 @@
 package yandexSpring2024
 
-import printLog
-import toStringLimited
 
 fun main(){
-    val n = readln().toInt()
-    val array = IntArray(n)
-    array.printLog{ it.asList().toStringLimited(10) }
+    val (a, b, c) = readln().split(" ").map(String::toInt)
+    if (a == b + c || b == a + c || c == a + b) println("YES")
+    else println("NO")
 }

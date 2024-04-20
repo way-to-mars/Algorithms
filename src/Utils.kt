@@ -86,7 +86,7 @@ fun <T : Comparable<T>> List<T>.fastMaxOf(): T? {
  */
 fun <T> Iterable<T>.toStringLimited(limit: Int): String {
     val size = this.fold(0) { acc, _ -> acc + 1 }
-    return when{
+    return when {
         size <= limit -> this.joinToString(separator = ", ", prefix = "[", postfix = "]")
         else -> {
             if (limit <= 0) return "[...]: size=$size"
@@ -98,20 +98,16 @@ fun <T> Iterable<T>.toStringLimited(limit: Int): String {
     }
 }
 
-fun IntArray.prefixSums(): IntArray{
-    val result = IntArray(this.size + 1)
-    result[0] = 0
-    for (i in this.indices){
+fun IntArray.prefixSums(): IntArray {
+    val result = IntArray(this.size + 1).also { it[0] = 0 }
+    for (i in this.indices)
         result[i + 1] = result[i] + this[i]
-    }
     return result
 }
 
-fun LongArray.prefixSums(): LongArray{
-    val result = LongArray(this.size + 1)
-    result[0] = 0
-    for (i in this.indices){
+fun LongArray.prefixSums(): LongArray {
+    val result = LongArray(this.size + 1).also { it[0] = 0 }
+    for (i in this.indices)
         result[i + 1] = result[i] + this[i]
-    }
     return result
 }
