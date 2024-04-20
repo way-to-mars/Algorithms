@@ -1,5 +1,8 @@
-fun main() {
-    val iarr: List<Int> = (1..20).map { it * it }
+import kotlin.jvm.Throws
 
-    iarr.toStringLimited(2).printLog()
+fun main() {
+    val arr = arrayOf(5, 4, 7, 2, 2, -1, 8).toIntArray()
+    arr.prefixSums().printLog{ it.contentToString() }
 }
+
+

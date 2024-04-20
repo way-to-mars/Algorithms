@@ -6,41 +6,41 @@ fun main() {
     println(arr)
     println()
 
-    for (i in -1..7) println(arr.column(i).contentToString())
+    for (i in -1..7) println(arr.getColumn(i).contentToString())
 }
 
-class Array2D<T>(val x: Int, val y: Int, init: (Int, Int) -> T) {
+class Array2D<T>(val row: Int, val col: Int, init: (Int, Int) -> T) {
     constructor(x: Int, y: Int, init: T) : this(x, y, { _, _ -> init })
-    private val data = Array<Any?>(x * y) { init(it % x, it / x) }
+    private val data = Array<Any?>(row * col) { init(it % row, it / row) }
 
     operator fun get(i: Int, j: Int): T {
-        if (i !in 0..<x || j !in 0..<y) throw IndexOutOfBoundsException("Can't access to ($i, $j) in Array2D($x, $y)")
+        if (i !in 0..<row || j !in 0..<col) throw IndexOutOfBoundsException("Can't access to ($i, $j) in Array2D($row, $col)")
         @Suppress("UNCHECKED_CAST")
-        return data[i + x * j] as T
+        return data[i + row * j] as T
     }
 
     operator fun set(i: Int, j: Int, value: T) {
-        if (i !in 0..<x || j !in 0..<y) throw IndexOutOfBoundsException("Can't access to ($i, $j) in Array2D($x, $y)")
-        data[i + x * j]  = value
+        if (i !in 0..<row || j !in 0..<col) throw IndexOutOfBoundsException("Can't access to ($i, $j) in Array2D($row, $col)")
+        data[i + row * j]  = value
     }
     
-    operator fun get(i: Int) = row(i)
+    operator fun get(i: Int) = getRow(i)
 
-    fun row(i: Int): Array<T>? {
-        if (i in 0..<y)
+    fun getRow(i: Int): Array<T>? {
+        if (i in 0..<col)
             @Suppress("UNCHECKED_CAST")
-            return Array(y){ data[it + i * x] } as Array<T>
+            return Array(col){ data[it + i * row] } as Array<T>
         return null
     }
 
-    fun column(j: Int): Array<T>? {
-        if (j in 0..<x)
+    fun getColumn(j: Int): Array<T>? {
+        if (j in 0..<row)
             @Suppress("UNCHECKED_CAST")
-            return Array(y){ data[j + it * x] } as Array<T>
+            return Array(col){ data[j + it * row] } as Array<T>
         return null
     }
 
-    fun index(linearIndex: Int) = linearIndex % x to linearIndex / x
+    fun index(linearIndex: Int) = linearIndex % row to linearIndex / row
 
     fun last(): T{
         @Suppress("UNCHECKED_CAST")
@@ -63,8 +63,8 @@ class Array2D<T>(val x: Int, val y: Int, init: (Int, Int) -> T) {
 
     override fun hashCode() = data.contentHashCode()
 
-    override fun toString() = (0..<y)
+    override fun toString() = (0..<col)
         .joinToString(separator = "\n") {
-            data.drop(it * x).take(x).joinToString(separator = ", ", prefix = "| ", postfix = " |")
+            data.drop(it * row).take(row).joinToString(separator = ", ", prefix = "| ", postfix = " |")
         }
 }

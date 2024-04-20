@@ -97,3 +97,21 @@ fun <T> Iterable<T>.toStringLimited(limit: Int): String {
         }
     }
 }
+
+fun IntArray.prefixSums(): IntArray{
+    val result = IntArray(this.size + 1)
+    result[0] = 0
+    for (i in this.indices){
+        result[i + 1] = result[i] + this[i]
+    }
+    return result
+}
+
+fun LongArray.prefixSums(): LongArray{
+    val result = LongArray(this.size + 1)
+    result[0] = 0
+    for (i in this.indices){
+        result[i + 1] = result[i] + this[i]
+    }
+    return result
+}
