@@ -1,7 +1,7 @@
 package lesson2
 
 fun main(){
-    val n = readln().toInt()
+    readln().toInt() // n
     val lengths = readln().split(" ").map(String::toInt)
 
     val sum = lengths.sum()

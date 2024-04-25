@@ -1,8 +1,8 @@
 package lesson4
 
 fun main() {
-    val n = readln().toInt()
-    val taskA = TaskA(n)
+    readln().toInt()  // n
+    val taskA = TaskA()
     val k = readln().toInt()
     (1..k).map {
         val (l, r) = readln().split(" ").map(String::toInt)
@@ -10,7 +10,7 @@ fun main() {
     }.joinToString(separator = " ").also(::println)
 }
 
-class TaskA(n: Int) {
+class TaskA() {
     val values = readln().split(" ").map(String::toInt).sorted().toIntArray()
 
     fun calc(left: Int, right: Int): Int {

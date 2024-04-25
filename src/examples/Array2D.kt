@@ -96,3 +96,32 @@ class IntArray2D(val row: Int, val col: Int) {
         }
 }
 
+
+/**
+ * Префиксные суммы двумерного массива
+ */
+fun IntArray2D.prefixSums(): IntArray2D {
+    val result = IntArray2D(this.row + 1, this.col + 1)
+
+    for (i in 0..<row)
+        for (j in 0..<col) {
+            result[i + 1, j + 1] = result[i, j + 1] + result[i + 1, j] - result[i, j] + this[i, j]
+        }
+    return result
+}
+
+/**
+ * Сумма эементов прямоугольного полузакрытого подмножества соходного множества source
+ * this = source.prefixSums()
+ */
+fun IntArray2D.subSum(fromRow: Int, fromColumn: Int, untilRow: Int, untilColumn: Int): Int {
+    require((fromRow >= 0) && (fromRow < untilRow) && (untilRow < row))
+    require((fromColumn >= 0) && (fromColumn < untilColumn) && (untilColumn < col))
+
+    val a = this[untilRow, untilColumn]
+    val b = this[fromRow, untilColumn]
+    val c = this[untilRow, fromColumn]
+    val d = this[fromRow, fromColumn]
+
+    return a - b - c + d
+}

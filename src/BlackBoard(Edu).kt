@@ -1,42 +1,38 @@
 import examples.IntArray2D
-import kotlin.jvm.Throws
 
 fun main() {
-    val arr = arrayOf(5, 4, 7, 2, 2, -1, 8).toIntArray()
-    arr.prefixSums().printLog { it.contentToString() }
-
-    val arr2d = IntArray2D(6, 6)
-    for (i in 0..34) {
-        val (x, y) = arr2d.index(i)
-        arr2d[x, y] = i + 1
-    }
-    arr2d[5, 5] = -36
-    arr2d.printLine()
-    println()
-    arr2d.prefixSums().subSum(0,0,6,6).printLine()
-    arr2d.asSequence().sum().printLine()
+    val value: Result<Int> = runCatching { "12".toInt() }
 }
 
-fun IntArray2D.prefixSums(): IntArray2D {
-    val result = IntArray2D(this.row + 1, this.col + 1)
 
-    for (i in 0..<row)
-        for (j in 0..<col) {
-            result[i + 1, j + 1] = result[i, j + 1] + result[i + 1, j] - result[i, j] + this[i, j]
+
+class lazyRandom(){
+    val value: Int by lazy<Int>{ 0 }
+}
+
+@JvmInline
+value class CustomerID(private val id: Int){
+    companion object{
+        @JvmStatic
+        fun fromString(str: String): CustomerID?{
+            val parsedInt = str.toIntOrNull() ?: return null
+            return CustomerID(parsedInt)
         }
-    return result
+    }
+    init {
+        require(id > 0)
+    }
+    override fun toString() = "CustomerID($id)"
+    fun toInt() = id
 }
 
-fun IntArray2D.subSum(fromRow: Int, fromColumn: Int, untilRow: Int, untilColumn: Int): Int {
-    require((fromRow >= 0) && (fromRow < untilRow) && (untilRow < row))
-    require((fromColumn >= 0) && (fromColumn < untilColumn) && (untilColumn < col))
-
-    val a = this[untilRow, untilColumn]
-    val b = this[fromRow, untilColumn]
-    val c = this[untilRow, fromColumn]
-    val d = this[fromRow, fromColumn]
-
-    return a - b - c + d
+@JvmName("specialMaxOnListOfString")
+fun List<String>.specialMax(): Int {
+    return this.maxOf { it.length }
 }
 
+@JvmName("specialMaxOnListOfInt")
+fun List<Int>.specialMax(): Int {
+    return this.maxOf { if (it >= 0) it else -1 }
+}
 
